@@ -1,6 +1,9 @@
 // shared config (dev and prod)
 const { resolve } = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
+
+const options = {};
 
 module.exports = {
   entry: "./index.tsx",
@@ -24,13 +27,18 @@ module.exports = {
         use: ["style-loader", "css-loader", "sass-loader"],
       },
       {
-        test: /\.(jpe?g|png|gif|svg)$/i,
-        use: [
-          "file-loader?hash=sha512&digest=hex&name=img/[contenthash].[ext]",
-          "image-webpack-loader?bypassOnDebug&optipng.optimizationLevel=7&gifsicle.interlaced=false",
-        ],
+        test: /\.(jpe?g|png|gif|svg|ico|webp|webP)$/i,
+        loader: "file-loader",
+        options: {
+          hash: "sha512",
+          name: "img/[contenthash].[ext]",
+          digest: "hex",
+        },
       },
     ],
   },
-  plugins: [new HtmlWebpackPlugin({ template: "index.html.ejs" })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: "index.html.ejs" }),
+    new WebpackManifestPlugin(options),
+  ],
 };
